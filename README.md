@@ -1,97 +1,73 @@
 # container-scanner-imagens
 
-## Descrição / Description
+## Descrição
 
-PT-BR: Scan simples de imagens Docker. Lista imagens locais (SDK do Docker com fallback para a CLI `docker images`), verifica tags `latest`/desatualizadas e gera um relatório simples de vulnerabilidades por imagem. MVP da área DevOps/Cloud. Os testes usam mocks, portanto não exigem Docker real.
+Scan simples de imagens Docker com relatório de vulnerabilidades (MVP). Lista as imagens Docker locais usando o SDK do Docker, com fallback para o comando `docker images` da CLI quando o SDK não está disponível. Para cada imagem, verifica itens determinísticos como tag `latest`, ausência de tag, ausência de digest e tamanho inválido, e emite um relatório simples com achados classificados por severidade.
 
-EN: Simple Docker image scanner. Lists local images (Docker SDK with `docker images` CLI fallback), checks for `latest`/outdated tags, and produces a simple per-image vulnerability report. DevOps/Cloud MVP. Tests use mocks, so no real Docker is required.
+Destinado a ambientes DevOps/Cloud. Os testes usam mocks, portanto não exigem um Docker real para rodar.
 
 ## Stack
 
 - Python 3.9+
-- docker SDK (opcional; quando ausente, cai para a CLI `docker images`)
-- pytest para testes
+- docker SDK (opcional; quando ausente, o programa usa a CLI `docker images`)
+- pytest (testes)
 
-## Como usar / How to use
+## Instalação
 
-PT-BR:
-```
+```bash
 pip install -e .
+```
+
+## Uso
+
+Execute o scanner sobre as imagens locais:
+
+```bash
 PYTHONPATH=src python -m container_scanner_imagens
 ```
 
-EN:
-```
-pip install -e .
-PYTHONPATH=src python -m container_scanner_imagens
-```
+O entry point `container-scanner` também fica disponível após a instalação.
 
-Saída de exemplo (sem imagens locais):
+Exemplo de saída sem imagens locais:
 
-PT-BR:
 ```
 Nenhuma imagem Docker local encontrada.
 ```
 
-EN:
-```
-No local Docker images found.
-```
+Exemplo de saída com imagens:
 
-Saída de exemplo (com imagens):
-
-PT-BR:
 ```
 Imagem: nginx (sha256:aaa123)
   Tags: nginx:latest
-  [media] Tag 'latest' detectada: a imagem usa a tag 'latest', que e mutavel e nao garante reprodutibilidade.
+  [media] Tag 'latest' detectada: a imagem usa a tag 'latest', que é mutável e não garante reprodutibilidade.
 ----------------------------------------
 ```
 
-EN:
-```
-Image: nginx (sha256:aaa123)
-  Tags: nginx:latest
-  [medium] 'latest' tag detected: the image uses the 'latest' tag, which is mutable and does not guarantee reproducibility.
-----------------------------------------
-```
+## Relatório de vulnerabilidades
 
-## Testes / Testes
-
-PT-BR: Rode a suíte com pytest. Todos os testes usam mocks (injecao de dependencia via parametro `client`); nenhum requer Docker real.
-
-EN: Run the suite with pytest. All tests use mocks (dependency injection via the `client` parameter); none require real Docker.
-
-```
-PYTHONPATH=src python -m pytest -q
-```
-
-Resultado esperado: todos os testes passam (13 passed).
-
-## Relatório de vulnerabilidades / Vulnerability report
-
-PT-BR: Para cada imagem, o relatorio emite achados simples e determinísticos:
+Para cada imagem, o relatório emite achados simples e determinísticos:
 
 - imagem sem tag -> baixa
 - tag `latest` -> media
 - sem digest de imagem -> baixa
-- tamanho invalido -> baixa
+- tamanho inválido -> baixa
 
-Pontuação: alta = 10, media = 5, baixa = 1. Uma imagem sem achados tem pontuação 0.
+Pontuação por imagem: alta = 10, media = 5, baixa = 1. Uma imagem sem achados tem pontuação 0.
 
-EN: For each image, the report emits simple deterministic findings:
+## Testes
 
-- image without tag -> low
-- `latest` tag -> medium
-- no image digest -> low
-- invalid size -> low
+Execute a suíte com pytest. Todos os testes usam mocks (injeção de dependência via parâmetro `client`); nenhum requer Docker real.
 
-Scoring: high = 10, medium = 5, low = 1. An image with no findings scores 0.
+```bash
+PYTHONPATH=src python -m pytest -q
+```
 
-## Licença / License
+Resultado: 13 testes aprovados.
+
+## Licença
 
 MIT
 
-## Autor / Author
+## Autor
 
 Kelvin Oliveira
