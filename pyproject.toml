@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "container-scanner-imagens"
+version = "0.1.0"
+description = "Scan simples de imagens Docker e relatório de vulnerabilidades (MVP)."
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [{ name = "Kelvin Oliveira" }]
+license = { text = "MIT" }
+dependencies = [
+    "docker>=6.0,<8.0",
+]
+
+[project.scripts]
+container-scanner = "container_scanner_imagens.__main__:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
