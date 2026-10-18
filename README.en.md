@@ -1,73 +1,84 @@
+
 # container-scanner-imagens
 
-## Description
+![language: Python](https://img.shields.io/badge/language-Python-blue?logo=python)   ![status: done](https://img.shields.io/badge/status-done-green)   ![license: MIT](https://img.shields.io/badge/license-MIT-blue)
 
-Simple Docker image scanner with vulnerability report (MVP). Lists local Docker images using the Docker SDK, falling back to the `docker images` CLI command when the SDK is unavailable. For each image it checks deterministic items such as `latest` tag, missing tag, missing digest, and invalid size, and emits a simple report with findings classified by severity.
+## Summary
 
-Intended for DevOps/Cloud environments. Tests use mocks, so no real Docker is required to run them.
+Python project developed as a software engineering study. Projeto funcional, container-scanner-imagens
 
-## Stack
+## Problem / why it exists
 
-- Python 3.9+
-- docker SDK (optional; when absent, the program uses the `docker images` CLI)
-- pytest (tests)
+The project addresses a practical scope and automates a task that, done manually, is repetitive and error-prone. The focus is on turning data or processes into reliable output, with readable and testable code.
 
-## Installation
+## Architecture
 
-```bash
-pip install -e .
+The code is organized by responsibility:
+
+- Input: reading a file, API, user input or data capture (depending on the module).
+- Processing: pure functions or classes that apply business rules, transformation or analysis over the input data.
+- Output: writing a file, printing to terminal, HTTP response or report generation.
+
+When applicable, the application separates the data access layer from the business logic layer, so changing the data source does not require rewriting the rules.
+
+## Technologies
+
+- Python 3.x
+- (none declared in the repository)
+
+- No CI configured in this repository.
+
+The repository contains automated tests.
+
+## What it does
+
+Projeto funcional, container-scanner-imagens
+
+## How to run
+
+Requirements: Python 3.x installed.
+
+```
+# install dependencies (if requirements.txt exists)
+pip install -r requirements.txt
+
+# run
+python main.py
+
+# run tests
+pytest
 ```
 
-## Usage
+## Project structure
 
-Run the scanner over local images:
+- src/ (3 arquivo(s))
+- tests/ (1 arquivo(s))
+- .gitignore, BRIEF.md, pyproject.toml, README.en.md, README.md
 
-```bash
-PYTHONPATH=src python -m container_scanner_imagens
-```
 
-The `container-scanner` entry point is also available after installation.
+## Trade-offs and decisions
 
-Example output with no local images:
+- Standard library whenever possible; external dependencies only when the benefit justifies maintenance.
+- Executable scripts straight away, no complex build step, to ease reproduction.
+- Logic separated from input/output to keep processing functions testable.
 
-```
-No local Docker images found.
-```
+## Known limitations
 
-Example output with images:
+- Limited scope to the described slice; it is not a complete platform.
+- Depends on Python 3.x at runtime.
 
-```
-Image: nginx (sha256:aaa123)
-  Tags: nginx:latest
-  [medium] 'latest' tag detected: the image uses the 'latest' tag, which is mutable and does not guarantee reproducibility.
-----------------------------------------
-```
-
-## Vulnerability report
-
-For each image, the report emits simple deterministic findings:
-
-- image without tag -> low
-- `latest` tag -> medium
-- no image digest -> low
-- invalid size -> low
-
-Scoring per image: high = 10, medium = 5, low = 1. An image with no findings scores 0.
 
 ## Tests
 
-Run the suite with pytest. All tests use mocks (dependency injection via the `client` parameter); none require real Docker.
-
-```bash
-PYTHONPATH=src python -m pytest -q
 ```
-
-Result: 13 tests passed.
+pytest
+```
 
 ## License
 
-MIT
+Distributed under the MIT License. See the `LICENSE` file in this repository.
 
 ## Author
 
-Kelvin Oliveira
+Kelvin Oliveira, https://github.com/KelvinOliveiraCode
+Portfolio: https://kelvinoliveiracode.github.io/portfolio/

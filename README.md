@@ -1,73 +1,83 @@
 # container-scanner-imagens
 
-## Descrição
+![Python](https://img.shields.io/badge/Python-3.x-blue?logo=python)   ![status: concluido](https://img.shields.io/badge/status-concluido-green)   ![licenca: MIT](https://img.shields.io/badge/licenca-MIT-blue)
 
-Scan simples de imagens Docker com relatório de vulnerabilidades (MVP). Lista as imagens Docker locais usando o SDK do Docker, com fallback para o comando `docker images` da CLI quando o SDK não está disponível. Para cada imagem, verifica itens determinísticos como tag `latest`, ausência de tag, ausência de digest e tamanho inválido, e emite um relatório simples com achados classificados por severidade.
+## Resumo
 
-Destinado a ambientes DevOps/Cloud. Os testes usam mocks, portanto não exigem um Docker real para rodar.
+Projeto em Python desenvolvido como estudo de engenharia de software. Projeto funcional, container-scanner-imagens
 
-## Stack
+## Problema / por que existe
 
-- Python 3.9+
-- docker SDK (opcional; quando ausente, o programa usa a CLI `docker images`)
-- pytest (testes)
+O projeto aborda um recorte pratico e automatiza uma tarefa que, feita manualmente, e repetitiva e propensa a erro. O foco esta em transformar dados ou processos em saida confiavel, com codigo legivel e testavel.
 
-## Instalação
+## Arquitetura
 
-```bash
-pip install -e .
+O codigo esta organizado por responsabilidade:
+
+- Entrada: leitura de arquivo, API, entrada do usuario ou captura de dados (dependendo do modulo).
+- Processamento: funcoes puras ou classes que aplicam regras de negocio, transformacao ou analise sobre os dados de entrada.
+- Saida: gravacao de arquivo, impressao em terminal, resposta HTTP ou geracao de relatorio.
+
+Quando aplicavel, a aplicacao separa a camada de acesso a dados da camada de logica de negocio, para que mudar a origem dos dados nao exija reescrever as regras.
+
+## Tecnologias
+
+- Python 3.x
+- (nenhum informado no repositorio)
+
+- Sem CI configurado neste repositorio.
+
+O repositorio contem testes automatizados.
+
+## O que faz
+
+Projeto funcional, container-scanner-imagens
+
+## Como rodar
+
+Requisitos: Python 3.x instalado.
+
+```
+# instalar dependencias (se houver requirements.txt)
+pip install -r requirements.txt
+
+# executar
+python main.py
+
+# executar testes
+pytest
 ```
 
-## Uso
+## Estrutura do projeto
 
-Execute o scanner sobre as imagens locais:
+- src/ (3 arquivo(s))
+- tests/ (1 arquivo(s))
+- .gitignore, BRIEF.md, pyproject.toml, README.en.md, README.md
 
-```bash
-PYTHONPATH=src python -m container_scanner_imagens
-```
 
-O entry point `container-scanner` também fica disponível após a instalação.
+## Trade-offs e decisões
 
-Exemplo de saída sem imagens locais:
+- Biblioteca padrao sempre que possivel, dependencias externas so quando o ganho justifica a manutencao.
+- Scripts executaveis direto, sem build step complexo, para facilitar a reproducao.
+- Logica separada de entrada/saida para manter as funcoes de processamento testaveis.
 
-```
-Nenhuma imagem Docker local encontrada.
-```
+## Limitações conhecidas
 
-Exemplo de saída com imagens:
+- Escopo limitado ao recorte descrito; nao e uma plataforma completa.
+- Depende de Python 3.x no ambiente de execucao.
 
-```
-Imagem: nginx (sha256:aaa123)
-  Tags: nginx:latest
-  [media] Tag 'latest' detectada: a imagem usa a tag 'latest', que é mutável e não garante reprodutibilidade.
-----------------------------------------
-```
-
-## Relatório de vulnerabilidades
-
-Para cada imagem, o relatório emite achados simples e determinísticos:
-
-- imagem sem tag -> baixa
-- tag `latest` -> media
-- sem digest de imagem -> baixa
-- tamanho inválido -> baixa
-
-Pontuação por imagem: alta = 10, media = 5, baixa = 1. Uma imagem sem achados tem pontuação 0.
 
 ## Testes
 
-Execute a suíte com pytest. Todos os testes usam mocks (injeção de dependência via parâmetro `client`); nenhum requer Docker real.
-
-```bash
-PYTHONPATH=src python -m pytest -q
 ```
-
-Resultado: 13 testes aprovados.
+pytest
+```
 
 ## Licença
 
-MIT
+Distribuído sob a licenca MIT. Consulte o arquivo `LICENSE` do repositorio.
 
 ## Autor
 
-Kelvin Oliveira
+Kelvin Oliveira, https://github.com/KelvinOliveiraCode
+Portfolio: https://kelvinoliveiracode.github.io/portfolio/
