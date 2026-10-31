@@ -1,118 +1,93 @@
 # container-scanner-imagens
 
-<div align="center">
-
 **English** · [Português (Brasil)](README.md)
 
-</div>
-
-[![Python 3](https://img.shields.io/badge/Python-3.x-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/) [![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?style=flat-square&logo=scikit-learn)](https://scikit-learn.org/) [![pandas](https://img.shields.io/badge/pandas-150458?style=flat-square&logo=pandas)](https://pandas.pydata.org/) [![pytest](https://img.shields.io/badge/pytest-0A9EDC?style=flat-square&logo=pytest)](https://docs.pytest.org/) [![MIT License](https://img.shields.io/badge/License-MIT-f4c430?style=flat-square)](LICENSE)
-
-### Projeto funcional ,  container-scanner-imagens
-
----
+[![Python 3](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white)](#) [![docker-py](https://img.shields.io/badge/docker--py-6%2F7-2496ED?style=flat-square&logo=docker)](#) [![pytest](https://img.shields.io/badge/pytest-13%20tests-0A9EDC?style=flat-square&logo=pytest)](#) [![MIT License](https://img.shields.io/badge/License-MIT-f4c430?style=flat-square)](LICENSE)
 
 ## What it is
 
-Projeto funcional ,  container-scanner-imagens
+**A simple Docker image scanner**: it lists the host's local images (via the docker-py SDK), evaluates each one with **severity weights** (low/medium/high) and produces a **vulnerability report** per image with an aggregated score. It is an educational container-security lab.
 
----
+## Status
 
-## Quick Start
+An educational lab, working and tested (13 tests).
 
-```bash
-# Clone and enter
-git clone https://github.com/KelvinOliveiraCode/<repo>.git
-cd <repo>
+## Features
 
-# Install dependencies
-# No requirements.txt detected
+- **Image inventory** (`scanner.py`): `DockerScanner.list_images` — lists local Docker images as `ImageInfo` (id, tags).
+- **Vulnerability report**: a `VulnReport` per image, with `Finding` (title, description, low/medium/high severity) and a weighted `score`.
+- **Docker detection**: if the SDK is unavailable or the daemon does not respond, the scanner degrades gracefully (`_import_docker`, `_client_or_none`).
+- **CLI**: `container-scanner` — scans all local images and prints the report.
 
-# Run the project
-python main.py
+## Architecture
 
-# Run tests
-pytest
+A `container_scanner_imagens` package with `scanner.py` (inventory + report) and `__main__.py` (CLI/formatting).
+
+```mermaid
+flowchart LR
+    DOCKER[(Docker daemon)] --> SC[DockerScanner]
+    SC --> REP[VulnReport per image]
+    REP --> OUT[_format_report - stdout]
+    CLI[container-scanner] --> SC
 ```
 
-## How it works
+## Stack
 
-Estrutura limpa e modular com separação de responsabilidades.
+- Python ≥ 3.10
+- docker (docker-py) ≥ 6.0, < 8.0
+- pytest (dev)
 
----
+## Repository layout
 
-## Capabilities
+```
+container-scanner-imagens/
+├── pyproject.toml · BRIEF.md
+├── src/container_scanner_imagens/
+│   ├── scanner.py    # inventory + vulnerability report
+│   └── __main__.py   # CLI
+├── tests/            # 13 tests
+└── LICENSE           # MIT
+```
 
-| Capacidade | Descrição |
-|------------|-------------|
-| Carregamento de Dados | Auto-download do TensorFlow creditcard.csv (284k transações) com cache local |
-| EDA e Visualização | Distribuição de classes, histogramas de Amount, heatmaps de correlação (matplotlib/seaborn) |
-| Pré-processamento | RobustScaler em Amount/Time, split estratificado, remoção de duplicatas |
-| Balanceamento | SMOTE oversampling (fallback: class_weight="balanced") |
-| Modelagem | LogisticRegression, RandomForest, ExtraTrees com RandomizedSearchCV (StratifiedKFold) |
-| Métricas | Accuracy, Precision, Recall, F1, ROC AUC, Specificity, Confusion Matrix |
-| Seleção | Score ponderado: Recall 40% + F1 30% + Precision 20% + Accuracy 10% |
-| Persistência | Serialização joblib para modelo, scaler e resultados completos |
+## Prerequisites and installation
 
+- Python ≥ 3.10
+- Docker running on the host (for a real scan; tests use fakes)
 
----
+```bash
+pip install -e .
+```
 
+## How to run
 
+```bash
+container-scanner
+# lists local images and prints the vulnerability report
+```
 
----
+## Tests and quality
 
-## FAQ
+Real command (verified by the agent):
 
-<details>
-<summary><strong>What is this project?</strong></summary>
+```bash
+PYTHONPATH=src python -m pytest tests/
+# 13 passed
+```
 
-A Python study/project demonstrating core concepts.
+## Technical decisions and trade-offs
 
-</details>
+- **Client injection in the scanner** (optional `client`): allows testing without a real Docker daemon.
+- **Severity-weighted score**: quick image prioritisation; the findings come from lab heuristics, not a full CVE scanner (Trivy/Grype).
 
-<details>
-<summary><strong>How do I run it?</strong></summary>
+## Known limitations and roadmap
 
-See [Quick Start](#quick-start) for copy-paste commands.
+- No real CVE layer scan (compare with Trivy/Grype); findings come from built-in heuristics.
+- Requires Docker on the host to list real images.
 
-</details>
+## Development process
 
-<details>
-<summary><strong>Are there tests?</strong></summary>
+An individual project by Kelvin Oliveira, built with orchestrated AI agents and reviewed by the author.
 
-No automated tests in this repository.
+## License and author
 
-</details>
-
-<details>
-<summary><strong>Can I use this in production?</strong></summary>
-
-This is a **study/portfolio project**. Review and harden (auth, persistence, monitoring, etc.) before production use.
-
-</details>
-
-
-
----
-
-## Documentation
-
-- **Source Code** ,  Browse the `src/` directory for implementation details
-- **API Reference** ,  Inline docstrings + type hints
-- **Architecture Diagram** ,  See [architecture.mermaid](docs/architecture.mermaid) (if present)
-- **Changelog** ,  [CHANGELOG.md](CHANGELOG.md) (if present)
-- **Contributing** ,  [CONTRIBUTING.md](CONTRIBUTING.md) (if present)
-
-## License
-
-[MIT](LICENSE) ,  Kelvin Oliveira
-
----
-
-<div align="center">
-
-**Built with** · Python 3 + scikit-learn + pandas
-
-**Author** · [Kelvin Oliveira](https://github.com/KelvinOliveiraCode) · [Portfolio](https://kelvinoliveiracode.github.io/portfolio/)
-
-</div>
+MIT — Copyright (c) 2026 Kelvin Rebelo de Oliveira. Author: [Kelvin Oliveira](https://github.com/KelvinOliveiraCode) · [Portfolio](https://kelvinoliveiracode.github.io/portfolio/)
